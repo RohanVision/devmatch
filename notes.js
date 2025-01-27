@@ -175,10 +175,13 @@ app.listen(7777, () => {
 // },
 
 
-// Why we need middleware
+// Question: Why we need middleware
 // The main purpose of the middleware is to modify the req and res objects, and then compile and execute any code that is required.It also helps to terminate the request - response session and call for the next middleware in the stack.
 
 // middleware enables communication and data management for distributed applications.
+
+
+
 
 // Order matter err always first if we pass 4 parameter
 app.use('/', (err, req, res, next) => {
@@ -210,6 +213,6 @@ app.get('/getUserData', (req, res) => {
 app.use('/', (err, req, res, next) => {
     if (err) {
         // Always Log your errors
-        res.status(500).send('Something went wrong');
+        res.status(500).send('Something went wrong'); // handling the error gracefully if there is no try-catch
     }
 });
