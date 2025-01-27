@@ -161,7 +161,6 @@ app.post('/user/login', (req, res) => {
 
 
 
-
 // Listen to the server on PORT Number, Also have call back function, only called when server is up and running
 app.listen(7777, () => {
     console.log("Server Running on 7777 Port")
@@ -174,3 +173,43 @@ app.listen(7777, () => {
 // "scripts": {
 //     "dev": "nodemon src/app.js"
 // },
+
+
+// Why we need middleware
+// The main purpose of the middleware is to modify the req and res objects, and then compile and execute any code that is required.It also helps to terminate the request - response session and call for the next middleware in the stack.
+
+// middleware enables communication and data management for distributed applications.
+
+// Order matter err always first if we pass 4 parameter
+app.use('/', (err, req, res, next) => {
+
+})
+
+
+// We are not getting error over ye below route 
+// Always write towards the end
+app.use('/', (err, req, res, next) => {
+    if (err) {
+        // Always Log your errors
+        res.status(500).send('Something went wrong');
+    }
+});
+
+// But Good Way to handle errors are try-catch
+// Also we handling error in this route itself 
+app.get('/getUserData', (req, res) => {
+    //try {
+    throw new Error("asbdas");
+    res.send('user data send');
+    // } catch (err) {
+    //     res.status(500).send('Some Error occured contact suppport')
+    // }
+});
+
+// If we comment out try catch then below code will show error. Order matters
+app.use('/', (err, req, res, next) => {
+    if (err) {
+        // Always Log your errors
+        res.status(500).send('Something went wrong');
+    }
+});
