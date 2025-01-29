@@ -4,17 +4,22 @@ const connectDB = require('./config/database'); // Mongoose now connected to Clu
 // Instance of the express application
 const app = express();
 const User = require('./models/user');
+// This is middleware to convert JSON Obj to JavaScript Obj and add into req.body
+app.use(express.json());
 
+// creating new instance of user model reading the data we receive from end user (POSTMAN, BROWSER) by req.body(API)
 app.post("/signup", async (req, res) => {
-    const user = new User({
-        firstName: "Sachin",
-        lastName: "Tendulkar",
-        emailId: "sachin@gmail.com",
-        password: "sachin123",
-    });
+    console.log(req.body)
+    const user = new User(req.body);
+    // const user = new User({
+    //     firstName: "Sachin",
+    //     lastName: "Tendulkar",
+    //     emailId: "sachin@gmail.com",
+    //     password: "sachin123",
+    // });
 
     try {
-        await user.save();
+        await user.save(); // Saving the new user model
         res.send("User Data added");
     } catch (error) {
         res.status(400).send("Error found")
