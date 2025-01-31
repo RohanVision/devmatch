@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
     firstName: {
-        type: String,
+        type: String
     },
     lastName: {
         type: String,
@@ -19,12 +19,14 @@ const userSchema = mongoose.Schema({
     gender: {
         type: String,
     }
-});
+})
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema)
 
 // OR We can explicitly define like belo
 
 // const User = mongoose.model("User", userSchema);
 
 // module.exports = User;
+
+

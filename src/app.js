@@ -24,7 +24,51 @@ app.post("/signup", async (req, res) => {
     } catch (error) {
         res.status(400).send("Error found")
     }
-})
+});
+// Find user with EmailId
+app.get("/user", async (req, res) => {
+    // const userEmail = req.body.emailId; // by email
+    const userId = req.body.id;
+    console.log(userId);
+    try {
+        // console.log(userEmail);
+        const users = await User.findById({ _id: userId });
+        // const users = await User.findById({ emailId: userEmail });
+        if (users.length === 0) {
+            res.status(404).send("User Not Found")
+        } else {
+            res.send(users);
+        }
+
+    } catch (error) {
+        res.status(404).send("Something went wrong");
+    }
+});
+
+// Find all documents in the collection
+app.get("/feed", async (req, res) => {
+    try {
+        const users = await User.find({})
+        res.send(users)
+    } catch (error) {
+        res.status(404).send("Something went wrong");
+    }
+});
+
+// Find One User with findOne method
+app.get("/userOne", async (req, res) => {
+    const userEmail = req.body.emailId;
+    try {
+        const users = await User.findOne({ emailId: userEmail })
+        if (!users) {
+            res.status(404).send("User not found")
+        } else {
+            res.send(users);
+        }
+    } catch (error) {
+        res.status(404).send("Something went wrong");
+    }
+});
 
 
 // It return 'PROMISE' so we can handle happy and bad case by using then and catch method
