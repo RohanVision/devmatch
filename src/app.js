@@ -4,6 +4,7 @@ const connectDB = require('./config/database'); // Mongoose now connected to Clu
 // Instance of the express application
 const app = express();
 const User = require('./models/user');
+const user = require('./models/user');
 // This is middleware to convert JSON Obj to JavaScript Obj and add into req.body
 app.use(express.json());
 
@@ -28,22 +29,33 @@ app.post("/signup", async (req, res) => {
 // Find user with EmailId
 app.get("/user", async (req, res) => {
     // const userEmail = req.body.emailId; // by email
-    const userId = req.body.id;
+    const userId = req.body.userId;
     console.log(userId);
     try {
         // console.log(userEmail);
-        const users = await User.findById({ _id: userId });
+        const users = await User.findById(userId);
         // const users = await User.findById({ emailId: userEmail });
         if (users.length === 0) {
             res.status(404).send("User Not Found")
         } else {
-            res.send(users);
+            res.send(`User found`);
         }
 
     } catch (error) {
         res.status(404).send("Something went wrong");
     }
 });
+
+// Delete the user by ID
+app.delete('/user', async (req, res) => {
+    const userId = req.body.userId;
+    try {
+        const users = await user.findByIdAndDelete(userId);
+        res.send("user deleted sucessfully");
+    } catch (error) {
+        res.status(404).send("User not found")
+    }
+})
 
 // Find all documents in the collection
 app.get("/feed", async (req, res) => {
@@ -69,6 +81,7 @@ app.get("/userOne", async (req, res) => {
         res.status(404).send("Something went wrong");
     }
 });
+
 
 
 // It return 'PROMISE' so we can handle happy and bad case by using then and catch method
