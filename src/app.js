@@ -46,6 +46,18 @@ app.get("/user", async (req, res) => {
     }
 });
 
+app.patch("/user", async (req, res) => {
+    const userId = req.body.userId;
+    const data = req.body;
+    try {
+        const users = await user.findByIdAndUpdate(userId, data, { returnDocument: 'before' });
+        console.log(users)
+        res.send("User updated sucessfully");
+    } catch (error) {
+        res.status(404).send("User Not Found")
+    }
+})
+
 // Delete the user by ID
 app.delete('/user', async (req, res) => {
     const userId = req.body.userId;
