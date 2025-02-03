@@ -23,7 +23,7 @@ app.post("/signup", async (req, res) => {
         await user.save(); // Saving the new user model
         res.send("User Data added");
     } catch (error) {
-        res.status(400).send("Error found")
+        res.status(400).send("Error found " + error.message)
     }
 });
 // Find user with EmailId
@@ -60,7 +60,7 @@ app.patch("/user/:userId", async (req, res) => {
         // Checked which Object can update
 
         if (data?.skills.length > 4) {
-            throw new Error("Only 4 skills allowed")
+            throw new Error("Only 4 skills allowed");
         }
 
         const users = await user.findByIdAndUpdate(userId, data,
