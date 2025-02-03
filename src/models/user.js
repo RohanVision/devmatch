@@ -4,7 +4,8 @@ const validator = require("validator")
 const userSchema = mongoose.Schema({
     firstName: {
         type: String,
-        maxLength: 4,
+        minLength: 4,
+        maxLength: 15,
         validate(value) {
             if (validator.isEmpty(value)) {
                 throw new Error("FirstName cannot be empty")
@@ -46,7 +47,7 @@ const userSchema = mongoose.Schema({
     },
     about: {
         type: String,
-        default: 'This is defaul about text'
+        default: 'This is default about text'
     },
     skills: {
         type: [String]
