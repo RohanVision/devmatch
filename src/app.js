@@ -34,6 +34,30 @@ app.post("/signup", async (req, res) => {
         res.status(400).send("Error : " + error.message)
     }
 });
+
+// Login User
+app.post('/login', async (req, res) => {
+    try {
+        const { emailId, password } = req.body;
+        const user = await User.findOne({ emailId: emailId });
+
+        if (!user) {
+            throw new Error("Email ID is not present in database")
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            throw new Error("Password doesn't match")
+        } else {
+            res.send("Login Sucessfully");
+        }
+
+    } catch (error) {
+        res.status(400).send("Error : " + error.message)
+    }
+})
+
 // Find user with EmailId
 app.get("/user", async (req, res) => {
     // const userEmail = req.body.emailId; // by email
