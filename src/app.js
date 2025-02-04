@@ -7,8 +7,11 @@ const User = require('./models/user');
 const user = require('./models/user');
 const { validateSignUpData } = require('./utils/validation');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken')
 // This is middleware to convert JSON Obj to JavaScript Obj and add into req.body
 app.use(express.json());
+app.use(cookieParser());
 
 // creating new instance of user model reading the data we receive from end user (POSTMAN, BROWSER) by req.body(API)
 app.post("/signup", async (req, res) => {
@@ -47,11 +50,43 @@ app.post('/login', async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
-        if (!isPasswordValid) {
-            throw new Error("Password doesn't match")
-        } else {
+        if (isPasswordValid) {
+            // Create JWT Token once email and password is valid and hide data(userId) and secret key
+            const token = await jwt.sign({ _id: user._id }, "Dev@1234")
+            console.log(token);
+
+            // Add Token to Cookie and send the response(token) to user
+            res.cookie("token", token);
             res.send("Login Sucessfully");
+
+        } else {
+            throw new Error("Password doesn't match")
         }
+
+    } catch (error) {
+        res.status(400).send("Error : " + error.message)
+    }
+});
+
+app.get('/profile', async (req, res) => {
+    try {
+        const cookies = req.cookies;
+        const { token } = cookies;
+        if (!token) {
+            throw new Error("Invalid Token")
+        }
+        // will verify token and secrte key. jwt.verify not give boolean but decoded value(in our case ID)
+        const decodedMessage = await jwt.verify(token, "Dev@1234")
+        console.log(decodedMessage); // get id from decodedmessage
+
+        const { _id } = decodedMessage;
+        console.log("Logged in User is " + _id)
+
+        const user = await User.findById(_id); // find the user with the id
+        if (!user) {
+            throw new Error("User Doesnt exist")
+        }
+        res.send("Reading Cookie" + user)
 
     } catch (error) {
         res.status(400).send("Error : " + error.message)
