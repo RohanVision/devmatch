@@ -4,7 +4,7 @@ const connectDB = require('./config/database'); // Mongoose now connected to Clu
 // Instance of the express application
 const app = express();
 const User = require('./models/user');
-const user = require('./models/user');
+const { userAuth } = require('./middlewares/auth')
 const { validateSignUpData } = require('./utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
@@ -68,21 +68,23 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/profile', async (req, res) => {
+app.get('/profile', userAuth, async (req, res) => {
     try {
-        const cookies = req.cookies;
-        const { token } = cookies;
-        if (!token) {
-            throw new Error("Invalid Token")
-        }
-        // will verify token and secrte key. jwt.verify not give boolean but decoded value(in our case ID)
-        const decodedMessage = await jwt.verify(token, "Dev@1234")
-        console.log(decodedMessage); // get id from decodedmessage
+        // Whole Code is now Auth middleware
+        // const cookies = req.cookies;
+        // const { token } = cookies;
+        // if (!token) {
+        //     throw new Error("Invalid Token")
+        // }
+        // // will verify token and secrte key. jwt.verify not give boolean but decoded value(in our case ID)
+        // const decodedMessage = await jwt.verify(token, "Dev@1234")
+        // console.log(decodedMessage); // get id from decodedmessage
 
-        const { _id } = decodedMessage;
-        console.log("Logged in User is " + _id)
+        // const { _id } = decodedMessage;
+        // console.log("Logged in User is " + _id)
 
-        const user = await User.findById(_id); // find the user with the id
+        // const user = await User.findById(_id); // find the user with the id
+        const user = req.user; // find the user with the id
         if (!user) {
             throw new Error("User Doesnt exist")
         }
