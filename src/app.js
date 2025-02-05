@@ -83,11 +83,12 @@ app.get('/profile', userAuth, async (req, res) => {
         // const { _id } = decodedMessage;
         // console.log("Logged in User is " + _id)
 
-        // const user = await User.findById(_id); // find the user with the id
+        // find the user with the id we already check in Auth middleware
+        // const user = await User.findById(_id); 
+        // if (!user) {
+        //     throw new Error("User Doesnt exist")
+        // }
         const user = req.user; // find the user with the id
-        if (!user) {
-            throw new Error("User Doesnt exist")
-        }
         res.send("Reading Cookie" + user)
 
     } catch (error) {
@@ -95,91 +96,100 @@ app.get('/profile', userAuth, async (req, res) => {
     }
 })
 
-// Find user with EmailId
-app.get("/user", async (req, res) => {
-    // const userEmail = req.body.emailId; // by email
-    const userId = req.body.userId;
-    console.log(userId);
+app.post('/sendingConnectionRequest', userAuth, async (req, res) => {
     try {
-        // console.log(userEmail);
-        const users = await User.findById(userId);
-        // const users = await User.findById({ emailId: userEmail });
-        if (users.length === 0) {
-            res.status(404).send("User Not Found")
-        } else {
-            res.send(`User found`);
-        }
-
+        const user = req.user;
+        res.send(user.firstName + "send request")
     } catch (error) {
-        res.status(404).send("Something went wrong");
-    }
-});
-
-app.patch("/user/:userId", async (req, res) => {
-    const userId = req.params?.userId;
-    const data = req.body;
-    try {
-        // Checked which Object can update
-        const ALLOWED_UPDATES = ["about", "gender", "age", "skills"];
-        const isUpdatedAllowed = Object.keys(data).every((k) => ALLOWED_UPDATES.includes(k));
-
-        if (!isUpdatedAllowed) {
-            throw new Error("Updates not allowerd");
-        }
-        // Checked which Object can update
-
-        if (data?.skills.length > 4) {
-            throw new Error("Only 4 skills allowed");
-        }
-
-        const users = await user.findByIdAndUpdate(userId, data,
-            {
-                returnDocument: 'before',
-                runValidators: true,
-            });
-
-        console.log(users);
-        res.send("User updated sucessfully");
-    } catch (error) {
-        res.status(404).send("Update Failed" + error.message)
+        res.status(400).send("Error : " + error.message);
     }
 })
 
-// Delete the user by ID
-app.delete('/user', async (req, res) => {
-    const userId = req.body.userId;
-    try {
-        const users = await user.findByIdAndDelete(userId);
-        res.send("user deleted sucessfully");
-    } catch (error) {
-        res.status(404).send("User not found")
-    }
-})
+// // Find user with EmailId
+// app.get("/user", async (req, res) => {
+//     // const userEmail = req.body.emailId; // by email
+//     const userId = req.body.userId;
+//     console.log(userId);
+//     try {
+//         // console.log(userEmail);
+//         const users = await User.findById(userId);
+//         // const users = await User.findById({ emailId: userEmail });
+//         if (users.length === 0) {
+//             res.status(404).send("User Not Found")
+//         } else {
+//             res.send(`User found`);
+//         }
 
-// Find all documents in the collection
-app.get("/feed", async (req, res) => {
-    try {
-        const users = await User.find({})
-        res.send(users)
-    } catch (error) {
-        res.status(404).send("Something went wrong");
-    }
-});
+//     } catch (error) {
+//         res.status(404).send("Something went wrong");
+//     }
+// });
 
-// Find One User with findOne method
-app.get("/userOne", async (req, res) => {
-    const userEmail = req.body.emailId;
-    try {
-        const users = await User.findOne({ emailId: userEmail })
-        if (!users) {
-            res.status(404).send("User not found")
-        } else {
-            res.send(users);
-        }
-    } catch (error) {
-        res.status(404).send("Something went wrong");
-    }
-});
+// app.patch("/user/:userId", async (req, res) => {
+//     const userId = req.params?.userId;
+//     const data = req.body;
+//     try {
+//         // Checked which Object can update
+//         const ALLOWED_UPDATES = ["about", "gender", "age", "skills"];
+//         const isUpdatedAllowed = Object.keys(data).every((k) => ALLOWED_UPDATES.includes(k));
+
+//         if (!isUpdatedAllowed) {
+//             throw new Error("Updates not allowerd");
+//         }
+//         // Checked which Object can update
+
+//         if (data?.skills.length > 4) {
+//             throw new Error("Only 4 skills allowed");
+//         }
+
+//         const users = await user.findByIdAndUpdate(userId, data,
+//             {
+//                 returnDocument: 'before',
+//                 runValidators: true,
+//             });
+
+//         console.log(users);
+//         res.send("User updated sucessfully");
+//     } catch (error) {
+//         res.status(404).send("Update Failed" + error.message)
+//     }
+// })
+
+// // Delete the user by ID
+// app.delete('/user', async (req, res) => {
+//     const userId = req.body.userId;
+//     try {
+//         const users = await user.findByIdAndDelete(userId);
+//         res.send("user deleted sucessfully");
+//     } catch (error) {
+//         res.status(404).send("User not found")
+//     }
+// })
+
+// // Find all documents in the collection
+// app.get("/feed", async (req, res) => {
+//     try {
+//         const users = await User.find({})
+//         res.send(users)
+//     } catch (error) {
+//         res.status(404).send("Something went wrong");
+//     }
+// });
+
+// // Find One User with findOne method
+// app.get("/userOne", async (req, res) => {
+//     const userEmail = req.body.emailId;
+//     try {
+//         const users = await User.findOne({ emailId: userEmail })
+//         if (!users) {
+//             res.status(404).send("User not found")
+//         } else {
+//             res.send(users);
+//         }
+//     } catch (error) {
+//         res.status(404).send("Something went wrong");
+//     }
+// });
 
 
 
