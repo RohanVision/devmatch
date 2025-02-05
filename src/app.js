@@ -52,11 +52,11 @@ app.post('/login', async (req, res) => {
 
         if (isPasswordValid) {
             // Create JWT Token once email and password is valid and hide data(userId) and secret key
-            const token = await jwt.sign({ _id: user._id }, "Dev@1234")
+            const token = await jwt.sign({ _id: user._id }, "Dev@1234", { expiresIn: '1hr' })
             console.log(token);
 
             // Add Token to Cookie and send the response(token) to user
-            res.cookie("token", token);
+            res.cookie("token", token, { expires: new Date(Date.now() + 900000), httpOnly: true });
             res.send("Login Sucessfully");
 
         } else {
