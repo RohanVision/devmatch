@@ -23,8 +23,8 @@ app.post("/signup", async (req, res) => {
         // Encrypt the password
         const passwordHash = await bcrypt.hash(password, 10);
 
-        console.log("Hashed Password" + " " + passwordHash);
-        console.log(req.body);
+        // console.log("Hashed Password" + " " + passwordHash);
+        // console.log(req.body);
 
         // Creating New User Instance
         const user = new User({
@@ -48,13 +48,10 @@ app.post('/login', async (req, res) => {
             throw new Error("Email ID is not present in database")
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await user.validatePassword(password);
 
         if (isPasswordValid) {
-            // Create JWT Token once email and password is valid and hide data(userId) and secret key
-            const token = await jwt.sign({ _id: user._id }, "Dev@1234", { expiresIn: '1hr' })
-            console.log(token);
-
+            const token = await user.getJWT();
             // Add Token to Cookie and send the response(token) to user
             res.cookie("token", token, { expires: new Date(Date.now() + 900000), httpOnly: true });
             res.send("Login Sucessfully");

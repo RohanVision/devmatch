@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-const validator = require("validator")
+const validator = require("validator");
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const userSchema = mongoose.Schema({
     firstName: {
@@ -55,6 +57,25 @@ const userSchema = mongoose.Schema({
 }, {
     timestamps: true,
 })
+
+
+// Always user normal function instead of arrow else 'this' will not work
+userSchema.methods.getJWT = async function () {
+    const user = this;
+    // Create JWT Token once email and password is valid and hide data(userId) and secret key
+    const token = await jwt.sign({ _id: user._id }, "Dev@1234", { expiresIn: '1hr' })
+
+    return token
+}
+
+userSchema.methods.validatePassword = async function (passwordInputByUser) {
+    const user = this;
+    const passwordHash = user.password;
+
+    const isPasswordValid = await bcrypt.compare(passwordInputByUser, passwordHash);
+
+    return isPasswordValid;
+}
 
 module.exports = mongoose.model("User", userSchema)
 
