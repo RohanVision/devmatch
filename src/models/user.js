@@ -41,11 +41,15 @@ const userSchema = mongoose.Schema({
     gender: {
         type: String,
         // This will work for only new document
-        validate(value) {
-            if (!['male', 'female', 'others'].includes(value)) {
-                throw new Error("Gender is not valid")
-            }
-        },
+        enum: {
+            values: ['male', 'female', 'other'],
+            message: `{VAlUE} not valid gender type`
+        }
+        // validate(value) {
+        //     if (!['male', 'female', 'others'].includes(value)) {
+        //         throw new Error("Gender is not valid")
+        //     }
+        // },
     },
     about: {
         type: String,
@@ -79,10 +83,9 @@ userSchema.methods.validatePassword = async function (passwordInputByUser) {
 
 module.exports = mongoose.model("User", userSchema)
 
-// OR We can explicitly define like belo
+/******* OR We can explicitly define like below **********/
 
-// const User = mongoose.model("User", userSchema);
-
+// const User = new mongoose.model("User", userSchema);
 // module.exports = User;
 
 
