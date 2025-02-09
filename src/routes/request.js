@@ -18,7 +18,7 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res)
         const data = await connectionRequest.save();
 
         res.json({
-            message: `Connection Request Send`,
+            message: `Connection Request Send to user`,
             data
         })
     } catch (error) {
