@@ -8,7 +8,7 @@ const { validateEditProfileData, validateEditPassword } = require('../utils/vali
 profileRouter.get('/profile/view', userAuth, async (req, res) => {
     try {
         const user = req.user; // find the user with the id
-        res.send("Reading Cookie" + user)
+        res.send(user)
 
     } catch (error) {
         res.status(400).send("Error : " + error.message)

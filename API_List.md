@@ -14,10 +14,13 @@
 
 ## connectionRequestRouter
 
--   POST /send/request/intersted/:userId
--   POST /send/request/ignored/:userId
--   POST /send/review/accepted/:reqestId
--   POST /send/review/rejected/:rejected
+    <!-- Dynamic request -->
+
+-   POST /send/request/:status/:userId
+-   POST /send/review/:status/:reqestId
+
+<!-- -   POST /send/request/ignored/:userId
+-   POST /send/review/rejected/:rejected -->
 
 ## userRoter
 
