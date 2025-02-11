@@ -60,8 +60,8 @@ requestRouter.post('/request/review/:status/:requestId', userAuth, async (req, r
 
         const connectionRequest = await ConnectionRequestModel.findOne({
             _id: requestId,
-            status: "interested",
             toUserId: loggedInUser._id,
+            status: "interested",
         })
         if (!connectionRequest) {
             return res.status(404).json({ message: "connection Request not found" })
