@@ -37,7 +37,12 @@ userRouter.get("/user/connection", userAuth, async (req, res) => {
         }).populate("fromUserId", USER_SAFE_DATA)
 
         // Map on each row of fromUserId data
-        const data = connectionRequest.map((row) => row.fromUserId);
+        const data = connectionRequest.map((row) => {
+            if (row.fromUserId.toString() === loggedInUser._id.toString()) {
+                return row.toUserId;
+            }
+            return row.fromUserId;
+        });
 
         res.json({ data });
 
