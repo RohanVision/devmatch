@@ -25,7 +25,7 @@
 ## userRoter
 
 -   GET /user/connection
--   GET /user/request
+-   GET /user/request/received
 -   GET /user/feed
 
 ## messageRouter
