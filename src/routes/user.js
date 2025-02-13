@@ -1,8 +1,10 @@
 const express = require("express");
-const { userAuth } = require("../middlewares/auth");
 const userRouter = express.Router();
+const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require('../models/connectionRequest')
+const USER_SAFE_DATA = "firstName lastName skills about"
 
+// Get all the pending connection request for the loogged in User
 userRouter.get('/user/request/received', userAuth, async (req, res) => {
     try {
         const loggedInUser = req.user;
@@ -10,7 +12,7 @@ userRouter.get('/user/request/received', userAuth, async (req, res) => {
         const connectionRequest = await ConnectionRequest.find({
             toUserId: loggedInUser._id,
             status: "interested"
-        }).populate("fromUserId", "firstName  lastName")
+        }).populate("fromUserId", USER_SAFE_DATA)
 
         res.json({
             message: "Data Fetched Sucessfully",
@@ -19,6 +21,28 @@ userRouter.get('/user/request/received', userAuth, async (req, res) => {
 
     } catch (error) {
         res.status(400).send("Error: " + error.message);
+    }
+})
+
+
+userRouter.get("/user/connection", userAuth, async (req, res) => {
+    try {
+        const loggedInUser = req.user;
+
+        const connectionRequest = await ConnectionRequest.find({
+            $or: [
+                { fromUserId: loggedInUser._id, status: 'accepted' },
+                { toUserId: loggedInUser._id, status: 'accepted' }
+            ]
+        }).populate("fromUserId", USER_SAFE_DATA)
+
+        // Map on each row of fromUserId data
+        const data = connectionRequest.map((row) => row.fromUserId);
+
+        res.json({ data });
+
+    } catch (error) {
+        res.status(400).send({ message: error.message });
     }
 })
 

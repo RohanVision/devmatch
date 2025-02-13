@@ -10,9 +10,9 @@ const validateSignUpData = (req) => {
         throw new Error("Please provide valid First Name between 4 to 15 charcters long")
     } else if (lastName.length < 3 || lastName.length > 15) {
         throw new Error("Please provide valid Last Name between 2 to 15 charcters long")
-    } else if (!validatior.isEmail(emailId)) {
+    } else if (!validator.isEmail(emailId)) {
         throw new Error("Please provide valid Email")
-    } else if (!validatior.isStrongPassword(password)) {
+    } else if (!validator.isStrongPassword(password)) {
         throw new Error("Password must be valid")
     }
 }
