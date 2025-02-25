@@ -3,8 +3,15 @@ const express = require('express');
 const connectDB = require('./config/database'); // Mongoose now connected to Cluster
 // Instance of the express application
 const app = express();
-
 const cookieParser = require('cookie-parser');
+const cors = require("cors");
+
+app.use(
+    cors({
+        origin: "http://localhost:5173/",
+        credentials: true,
+    })
+)
 // This is middleware to convert JSON Obj to JavaScript Obj and add into req.body
 app.use(express.json());
 app.use(cookieParser());

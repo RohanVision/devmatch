@@ -44,7 +44,7 @@ authRouter.post('/login', async (req, res) => {
             const token = await user.getJWT();
             // Add Token to Cookie and send the response(token) to user
             res.cookie("token", token, { expires: new Date(Date.now() + 900000), httpOnly: true });
-            res.send("Login Sucessfully");
+            res.send(user);
 
         } else {
             throw new Error("Password doesn't match")
