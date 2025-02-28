@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require('../models/connectionRequest');
 const User = require("../models/user");
-const USER_SAFE_DATA = "firstName lastName skills about"
+const USER_SAFE_DATA = "firstName lastName skills about photoUrl"
 
 // Get all the pending connection request for the loogged in User
 userRouter.get('/user/request/received', userAuth, async (req, res) => {
