@@ -45,7 +45,7 @@ const userSchema = mongoose.Schema({
         // This will work for only new document
         enum: {
             values: ['male', 'female', 'other'],
-            message: `{VAlUE} not valid gender type`
+            message: `{VALUE} not valid gender type`
         }
         // validate(value) {
         //     if (!['male', 'female', 'others'].includes(value)) {
